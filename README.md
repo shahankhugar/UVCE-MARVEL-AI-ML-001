@@ -13,7 +13,7 @@
 | Task 2 | API App — PULSE (Movies + Music) | ✅ Done | [View](https://shahankhugar.github.io/portfolio/) |
 | Task 3 | GitHub — Fork + Pull Request | ✅ Done | [View PR](https://github.com/UVCE-Marvel/git-task/pull/275) |
 | Task 7 | Portfolio Website | ✅ Done | [Live Site](https://shahankhugar.github.io/portfolio/) |
-| Task 8 | Markdown Article — AGI | ✅ Done | [Read Article](#) |
+| Task 8 | Markdown Article — AGI | ✅ Done | [Read Article](./AGI_Article.md) |
 | Task 4 | Linux CLI | ⏳ Pending | — |
 | Task 5 | Linear Regression | ⏳ Pending | — |
 | Task 6 | NumPy Matrix Puzzle | ⏳ Pending | — |

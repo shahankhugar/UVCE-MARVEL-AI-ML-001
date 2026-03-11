@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PULSE — Where Movies Meet Music</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #080810;
+      --surface: #0f0f1a;
+      --card: #13131f;
+      --border: rgba(255,255,255,0.07);
+      --accent-movie: #e63946;
+      --accent-music: #00f5d4;
+      --accent-glow-movie: rgba(230,57,70,0.3);
+      --accent-glow-music: rgba(0,245,212,0.3);
+      --text: #f0f0f0;
+      --muted: #6b6b80;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(230,57,70,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(0,245,212,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(120,40,200,0.04) 0%, transparent 60%);
+      animation: bgPulse 8s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes bgPulse {
+      0% { transform: scale(1) rotate(0deg); }
+      100% { transform: scale(1.1) rotate(2deg); }
+    }
+
+    /* Noise texture overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      padding: 32px 0 0;
+      text-align: center;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: clamp(64px, 12vw, 120px);
+      letter-spacing: 0.12em;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--accent-movie) 0%, #ff6b9d 40%, var(--accent-music) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 40px rgba(230,57,70,0.4));
+      animation: logoFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { filter: drop-shadow(0 0 40px rgba(230,57,70,0.4)); }
+      50% { filter: drop-shadow(0 0 60px rgba(0,245,212,0.4)); }
+    }
+
+    .tagline {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    /* ─── TAB SWITCHER ─── */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin: 40px 0 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 6px;
+      width: fit-content;
+      margin-inline: auto;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 12px 32px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn.active[data-tab="movies"] {
+      background: var(--accent-movie);
+      color: white;
+      box-shadow: 0 0 24px var(--accent-glow-movie);
+    }
+
+    .tab-btn.active[data-tab="music"] {
+      background: var(--accent-music);
+      color: #080810;
+      box-shadow: 0 0 24px var(--accent-glow-music);
+    }
+
+    .tab-btn:not(.active):hover {
+      color: var(--text);
+      background: var(--border);
+    }
+
+    /* ─── SEARCH BAR ─── */
+    .search-section {
+      margin-bottom: 40px;
+    }
+
+    .search-wrapper {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 64px 18px 24px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: var(--text);
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .search-input::placeholder { color: var(--muted); }
+
+    .search-input:focus {
+      border-color: var(--accent-movie);
+      box-shadow: 0 0 0 3px var(--accent-glow-movie);
+    }
+
+    #musicSearch:focus {
+      border-color: var(--accent-music);
+      box-shadow: 0 0 0 3px var(--accent-glow-music);
+    }
+
+    .search-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--accent-movie);
+      border: none;
+      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+      color: white;
+    }
+
+    .search-btn:hover {
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 0 20px var(--accent-glow-movie);
+    }
+
+    .music-btn { background: var(--accent-music); color: #080810; }
+    .music-btn:hover { box-shadow: 0 0 20px var(--accent-glow-music) !important; }
+
+    /* ─── PANELS ─── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ─── LOADING ─── */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 60px;
+    }
+
+    .loading.show { display: block; }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent-movie);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    .music-spinner { border-top-color: var(--accent-music); }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── ERROR / EMPTY ─── */
+    .message {
+      text-align: center;
+      padding: 60px;
+      color: var(--muted);
+      font-size: 15px;
+      display: none;
+    }
+    .message.show { display: block; }
+    .message .icon { font-size: 48px; margin-bottom: 16px; }
+
+    /* ─── GRID ─── */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── MOVIE CARD ─── */
+    .movie-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .movie-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent-movie), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--accent-movie);
+      box-shadow: 0 20px 60px rgba(230,57,70,0.2);
+    }
+
+    .movie-card:hover::before { opacity: 0.05; }
+
+    .movie-poster {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      display: block;
+    }
+
+    .movie-poster-placeholder {
+      width: 100%;
+      aspect-ratio: 2/3;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .movie-info {
+      padding: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .movie-title {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .movie-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .movie-year {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .movie-type {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--accent-glow-movie);
+      color: var(--accent-movie);
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    /* ─── MUSIC CARD ─── */
+    .music-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .music-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--accent-music);
+      box-shadow: 0 20px 60px rgba(0,245,212,0.15);
+    }
+
+    .music-artwork {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    .music-info {
+      padding: 14px;
+    }
+
+    .music-track {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .music-artist {
+      font-size: 12px;
+      color: var(--accent-music);
+      margin-bottom: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .music-album {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ─── AUDIO PLAYER ─── */
+    .audio-player {
+      width: 100%;
+      height: 32px;
+      accent-color: var(--accent-music);
+      cursor: pointer;
+    }
+
+    .preview-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8,8,16,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: modalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.9) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .modal-close:hover { background: var(--accent-movie); border-color: var(--accent-movie); }
+
+    .modal-hero {
+      display: flex;
+      gap: 24px;
+      padding: 28px;
+    }
+
+    .modal-poster {
+      width: 160px;
+      min-width: 160px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    .modal-poster-placeholder {
+      width: 160px;
+      min-width: 160px;
+      height: 240px;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .modal-header { flex: 1; }
+
+    .modal-type-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--accent-glow-movie);
+      color: var(--accent-movie);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .modal-year {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .modal-rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .rating-badge {
+      background: linear-gradient(135deg, var(--accent-movie), #ff6b9d);
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 8px;
+    }
+
+    .modal-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 0 28px 28px;
+    }
+
+    .detail-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .detail-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .detail-value {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .modal-plot {
+      grid-column: 1 / -1;
+    }
+
+    .genre-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .genre-tag {
+      font-size: 11px;
+      background: rgba(230,57,70,0.1);
+      color: var(--accent-movie);
+      border: 1px solid rgba(230,57,70,0.2);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* ─── HERO SECTION ─── */
+    .hero-section {
+      text-align: center;
+      padding: 60px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-icon { font-size: 64px; animation: bounce 2s ease-in-out infinite; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      letter-spacing: 0.06em;
+      color: var(--text);
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 340px;
+      line-height: 1.6;
+    }
+
+    .suggestions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .suggestion-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .suggestion-chip:hover {
+      border-color: var(--accent-movie);
+      color: var(--accent-movie);
+    }
+
+    .music-chip:hover {
+      border-color: var(--accent-music) !important;
+      color: var(--accent-music) !important;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      padding: 48px 0 32px;
+      border-top: 1px solid var(--border);
+      margin-top: 60px;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 28px;
+      letter-spacing: 0.15em;
+      background: linear-gradient(135deg, var(--accent-movie), var(--accent-music));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .footer-sub {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 600px) {
+      .modal-hero { flex-direction: column; }
+      .modal-poster, .modal-poster-placeholder { width: 100%; min-width: unset; height: auto; }
+      .modal-detail-grid { grid-template-columns: 1fr; }
+      .results-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HEADER -->
+  <header>
+    <div class="logo">PULSE</div>
+    <div class="tagline">🎬 Where Movies Meet Music 🎵</div>
+  </header>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="movies" onclick="switchTab('movies')">
+      🎬 Movies
+    </button>
+    <button class="tab-btn" data-tab="music" onclick="switchTab('music')">
+      🎵 Music
+    </button>
+  </div>
+
+  <!-- MOVIES PANEL -->
+  <div class="panel active" id="panel-movies">
+    <div class="search-section">
+      <div class="search-wrapper">
+        <input class="search-input" id="movieSearch" type="text"
+               placeholder="Search movies, series, episodes..."
+               onkeydown="if(event.key==='Enter') searchMovies()"/>
+        <button class="search-btn" onclick="searchMovies()">🔍</button>
+      </div>
+    </div>
+
+    <div class="loading" id="movieLoading">
+      <div class="spinner"></div>
+      <p style="color:var(--muted);font-size:14px">Searching the universe...</p>
+    </div>
+
+    <div class="message" id="movieError">
+      <div class="icon">😶‍🌫️</div>
+      <p id="movieErrorText">Something went wrong. Try again!</p>
+    </div>
+
+    <div id="movieResults"></div>
+
+    <!-- Hero empty state -->
+    <div class="hero-section" id="movieHero">
+      <div class="hero-icon">🎬</div>
+      <div class="hero-title">SEARCH MOVIES</div>
+      <div class="hero-sub">Find any movie, TV series or episode. Click on a result for full details.</div>
+      <div class="suggestions" id="movieSuggestions">
+        <span class="suggestion-chip" onclick="quickSearch('Inception')">Inception</span>
+        <span class="suggestion-chip" onclick="quickSearch('Interstellar')">Interstellar</span>
+        <span class="suggestion-chip" onclick="quickSearch('The Dark Knight')">Dark Knight</span>
+        <span class="suggestion-chip" onclick="quickSearch('Avengers')">Avengers</span>
+        <span class="suggestion-chip" onclick="quickSearch('Oppenheimer')">Oppenheimer</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MUSIC PANEL -->
+  <div class="panel" id="panel-music">
+    <div class="search-section">
+      <div class="search-wrapper">
+        <input class="search-input" id="musicSearch" type="text"
+               placeholder="Search artists, songs, albums..."
+               onkeydown="if(event.key==='Enter') searchMusic()"/>
+        <button class="search-btn music-btn" onclick="searchMusic()">🔍</button>
+      </div>
+    </div>
+
+    <div class="loading" id="musicLoading">
+      <div class="spinner music-spinner"></div>
+      <p style="color:var(--muted);font-size:14px">Tuning in...</p>
+    </div>
+
+    <div class="message" id="musicError">
+      <div class="icon">🎧</div>
+      <p id="musicErrorText">No tracks found. Try a different search!</p>
+    </div>
+
+    <div id="musicResults"></div>
+
+    <!-- Hero empty state -->
+    <div class="hero-section" id="musicHero">
+      <div class="hero-icon">🎵</div>
+      <div class="hero-title">SEARCH MUSIC</div>
+      <div class="hero-sub">Search any artist or song and get 30-second preview right here.</div>
+      <div class="suggestions" id="musicSuggestions">
+        <span class="suggestion-chip music-chip" onclick="quickMusicSearch('The Weeknd')">The Weeknd</span>
+        <span class="suggestion-chip music-chip" onclick="quickMusicSearch('Coldplay')">Coldplay</span>
+        <span class="suggestion-chip music-chip" onclick="quickMusicSearch('Arijit Singh')">Arijit Singh</span>
+        <span class="suggestion-chip music-chip" onclick="quickMusicSearch('Dua Lipa')">Dua Lipa</span>
+        <span class="suggestion-chip music-chip" onclick="quickMusicSearch('AR Rahman')">A.R. Rahman</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOVIE DETAIL MODAL -->
+<div class="modal-overlay" id="movieModal" onclick="closeModal(event)">
+  <div class="modal" id="modalContent">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">PULSE</div>
+  <div class="footer-sub">Movies via OMDB API · Music via iTunes API · Built for UVCE MARVEL</div>
+</footer>
+
+<script>
+  // ─── CONFIG ───
+  // Get your free OMDB API key at: https://www.omdbapi.com/apikey.aspx
+  // Replace the key below with yours!
+  const OMDB_KEY = 'b9bd48a6'; // Free demo key — get your own at omdbapi.com
+
+  // ─── TAB SWITCHING ───
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+    document.getElementById(`panel-${tab}`).classList.add('active');
+  }
+
+  // ─── MOVIE SEARCH ───
+  async function searchMovies() {
+    const query = document.getElementById('movieSearch').value.trim();
+    if (!query) return;
+
+    showMovieLoading(true);
+    hideMovieHero();
+    hideMovieError();
+    document.getElementById('movieResults').innerHTML = '';
+
+    try {
+      const res = await fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(query)}&apikey=${OMDB_KEY}`);
+      const data = await res.json();
+
+      if (data.Response === 'True') {
+        renderMovies(data.Search);
+      } else {
+        showMovieError(data.Error || 'No results found.');
+      }
+    } catch (e) {
+      showMovieError('Network error. Check your connection!');
+    } finally {
+      showMovieLoading(false);
+    }
+  }
+
+  function renderMovies(movies) {
+    const grid = document.getElementById('movieResults');
+    grid.innerHTML = `<div class="results-grid">${movies.map(m => `
+      <div class="movie-card" onclick="openMovie('${m.imdbID}')">
+        ${m.Poster !== 'N/A'
+          ? `<img class="movie-poster" src="${m.Poster}" alt="${m.Title}" loading="lazy"/>`
+          : `<div class="movie-poster-placeholder">🎬</div>`}
+        <div class="movie-info">
+          <div class="movie-title">${m.Title}</div>
+          <div class="movie-meta">
+            <span class="movie-year">${m.Year}</span>
+            <span class="movie-type">${m.Type}</span>
+          </div>
+        </div>
+      </div>`).join('')}</div>`;
+  }
+
+  // ─── MOVIE DETAIL MODAL ───
+  async function openMovie(id) {
+    const modal = document.getElementById('movieModal');
+    const body = document.getElementById('modalBody');
+    modal.classList.add('show');
+    body.innerHTML = `<div style="padding:40px;text-align:center"><div class="spinner" style="margin:0 auto"></div></div>`;
+
+    try {
+      const res = await fetch(`https://www.omdbapi.com/?i=${id}&plot=full&apikey=${OMDB_KEY}`);
+      const m = await res.json();
+
+      const genres = m.Genre ? m.Genre.split(',').map(g =>
+        `<span class="genre-tag">${g.trim()}</span>`).join('') : '';
+
+      body.innerHTML = `
+        <div class="modal-hero">
+          ${m.Poster !== 'N/A'
+            ? `<img class="modal-poster" src="${m.Poster}" alt="${m.Title}"/>`
+            : `<div class="modal-poster-placeholder">🎬</div>`}
+          <div class="modal-header">
+            <div class="modal-type-badge">${m.Type || 'movie'}</div>
+            <div class="modal-title">${m.Title}</div>
+            <div class="modal-year">📅 ${m.Year} &nbsp;·&nbsp; ⏱ ${m.Runtime}</div>
+            ${m.imdbRating !== 'N/A' ? `
+              <div class="modal-rating">
+                <span class="rating-badge">⭐ ${m.imdbRating}</span>
+                <span style="font-size:12px;color:var(--muted)">${m.imdbVotes} votes</span>
+              </div>` : ''}
+            <div class="genre-tags">${genres}</div>
+          </div>
+        </div>
+        <div class="modal-detail-grid">
+          <div class="detail-item modal-plot">
+            <div class="detail-label">Plot</div>
+            <div class="detail-value" style="color:var(--muted);line-height:1.6">${m.Plot || 'N/A'}</div>
+          </div>
+          ${m.Director !== 'N/A' ? `<div class="detail-item">
+            <div class="detail-label">Director</div>
+            <div class="detail-value">${m.Director}</div>
+          </div>` : ''}
+          ${m.Actors !== 'N/A' ? `<div class="detail-item">
+            <div class="detail-label">Cast</div>
+            <div class="detail-value">${m.Actors}</div>
+          </div>` : ''}
+          ${m.Language !== 'N/A' ? `<div class="detail-item">
+            <div class="detail-label">Language</div>
+            <div class="detail-value">${m.Language}</div>
+          </div>` : ''}
+          ${m.Country !== 'N/A' ? `<div class="detail-item">
+            <div class="detail-label">Country</div>
+            <div class="detail-value">${m.Country}</div>
+          </div>` : ''}
+          ${m.BoxOffice && m.BoxOffice !== 'N/A' ? `<div class="detail-item">
+            <div class="detail-label">Box Office</div>
+            <div class="detail-value" style="color:var(--accent-music)">${m.BoxOffice}</div>
+          </div>` : ''}
+          ${m.Awards && m.Awards !== 'N/A' ? `<div class="detail-item modal-plot">
+            <div class="detail-label">Awards</div>
+            <div class="detail-value" style="color:#ffd700">${m.Awards}</div>
+          </div>` : ''}
+        </div>`;
+    } catch (e) {
+      body.innerHTML = `<div style="padding:40px;text-align:center;color:var(--muted)">Failed to load details.</div>`;
+    }
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('movieModal')) closeModalDirect();
+  }
+
+  function closeModalDirect() {
+    document.getElementById('movieModal').classList.remove('show');
+  }
+
+  // ─── MUSIC SEARCH ───
+  async function searchMusic() {
+    const query = document.getElementById('musicSearch').value.trim();
+    if (!query) return;
+
+    showMusicLoading(true);
+    hideMusicHero();
+    hideMusicError();
+    document.getElementById('musicResults').innerHTML = '';
+
+    try {
+      const res = await fetch(
+        `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=20`
+      );
+      const data = await res.json();
+
+      if (data.results && data.results.length > 0) {
+        renderMusic(data.results);
+      } else {
+        showMusicError('No tracks found. Try a different search!');
+      }
+    } catch (e) {
+      showMusicError('Network error. Check your connection!');
+    } finally {
+      showMusicLoading(false);
+    }
+  }
+
+  function renderMusic(tracks) {
+    const grid = document.getElementById('musicResults');
+    grid.innerHTML = `<div class="results-grid">${tracks.map(t => `
+      <div class="music-card">
+        <img class="music-artwork"
+             src="${t.artworkUrl100.replace('100x100', '300x300')}"
+             alt="${t.trackName}" loading="lazy"/>
+        <div class="music-info">
+          <div class="music-track">${t.trackName || 'Unknown Track'}</div>
+          <div class="music-artist">${t.artistName}</div>
+          <div class="music-album">${t.collectionName || ''}</div>
+          ${t.previewUrl ? `
+            <div class="preview-label">30s Preview</div>
+            <audio class="audio-player" controls preload="none">
+              <source src="${t.previewUrl}" type="audio/mpeg"/>
+            </audio>` : `<div style="font-size:11px;color:var(--muted)">No preview available</div>`}
+        </div>
+      </div>`).join('')}</div>`;
+  }
+
+  // ─── QUICK SEARCH HELPERS ───
+  function quickSearch(q) {
+    document.getElementById('movieSearch').value = q;
+    searchMovies();
+  }
+
+  function quickMusicSearch(q) {
+    document.getElementById('musicSearch').value = q;
+    searchMusic();
+  }
+
+  // ─── UI HELPERS ───
+  function showMovieLoading(v) {
+    document.getElementById('movieLoading').classList.toggle('show', v);
+  }
+  function showMovieError(msg) {
+    document.getElementById('movieErrorText').textContent = msg;
+    document.getElementById('movieError').classList.add('show');
+  }
+  function hideMovieError() {
+    document.getElementById('movieError').classList.remove('show');
+  }
+  function hideMovieHero() {
+    document.getElementById('movieHero').style.display = 'none';
+  }
+  function showMusicLoading(v) {
+    document.getElementById('musicLoading').classList.toggle('show', v);
+  }
+  function showMusicError(msg) {
+    document.getElementById('musicErrorText').textContent = msg;
+    document.getElementById('musicError').classList.add('show');
+  }
+  function hideMusicError() {
+    document.getElementById('musicError').classList.remove('show');
+  }
+  function hideMusicHero() {
+    document.getElementById('musicHero').style.display = 'none';
+  }
+
+  // Close modal on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModalDirect();
+  });
+</script>
+</body>
+</html>

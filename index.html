@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpaceX Rocket Explorer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Animated starfield -->
+  <canvas id="starCanvas"></canvas>
+
+  <!-- HUD corner brackets -->
+  <div class="hud-corner tl"></div>
+  <div class="hud-corner tr"></div>
+  <div class="hud-corner bl"></div>
+  <div class="hud-corner br"></div>
+
+  <div class="page-content">
+
+    <!-- Title -->
+    <div class="title-wrap">
+      <h1 data-text="SpaceX Explorer">🚀 SpaceX Explorer</h1>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <div class="status-dot"></div>
+      <span class="status-text">API CONNECTED · SHASHANK'S MARVEL TASK</span>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="select-wrap">
+        <select id="rocketSelect">
+          <option value="">— SELECT ROCKET —</option>
+        </select>
+        <span class="select-arrow">▾</span>
+      </div>
+      <button id="launchBtn" onclick="showRocket()">LAUNCH</button>
+    </div>
+
+    <!-- Rocket info injected here -->
+    <div id="rocketInfo"></div>
+
+  </div>
+
+  <footer>
+    <p>Powered by SpaceX Public API &nbsp;·&nbsp; T-00:00:00</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

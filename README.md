@@ -22,7 +22,7 @@
 | Task 17 | VR/AR Report | ⏳ Pending | — |
 | Task 18 | Sad Servers | ⏳ Pending | — |
 | Task 19 | Express Web App | ⏳ Pending | — |
-|| Task 20 | Jupyter Notebook | ✅ Done | [View](./Notebook_ninja_ipynb) |
+| Task 20 | Jupyter Notebook | ✅ Done | [View](./Notebook_ninja_ipynb) |
 | Task 21 | Watch & Reflect | ✅ Done | [View](./Task21_Watch_and_Reflect.md) |
 | Task 1 | 3D Printing | 🎥 Video | — |
 | Task 9 | Tinkercad Radar | 🎥 Video | — |

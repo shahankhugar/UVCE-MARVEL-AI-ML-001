@@ -21,7 +21,7 @@ Narrow AI      Human-level     Superhuman
 
 <div align="center">
 
-![AI Future](https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Artificial_Intelligence_%26_AI_%26_Machine_Learning_-_30212411048.jpg/320px-Artificial_Intelligence_%26_AI_%26_Machine_Learning_-_30212411048.jpg)
+![AI Future](https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Nicolas_P._Rougier%27s_rendering_of_the_human_brain.png/640px-Nicolas_P._Rougier%27s_rendering_of_the_human_brain.png)
 
 </div>
 

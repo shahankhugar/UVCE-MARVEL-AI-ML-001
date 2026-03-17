@@ -21,7 +21,7 @@ Narrow AI      Human-level     Superhuman
 
 <div align="center">
 
-![AI Future](https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Nicolas_P._Rougier%27s_rendering_of_the_human_brain.png/640px-Nicolas_P._Rougier%27s_rendering_of_the_human_brain.png)
+![AI Future](https://aimagazine.com/articles/how-agi-will-ultimately-reshape-everything)
 
 </div>
 
